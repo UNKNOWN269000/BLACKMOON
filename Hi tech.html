@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Futuristic HUD Animation - Landscape Only</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css?family=Audiowide|Libre+Barcode+39+Text|Roboto&display=swap');
+
+    body, html {margin: 0;
+  padding: 0;
+  min-height: 100%;
+  width: 100%;
+  background: #00121b;
+  background: url("background.jpg") no-repeat center center fixed;
+      background-size: cover; /* makes it stretch to fit */
+      color: #0cf;
+  font-family: 'Orbitron', monospace;
+  overflow-x: hidden; /* optional, prevent horizontal scroll */
+  overflow-y: auto;   /* enable vertical scrolling */
+  grid-template-columns: 1fr 770px 1fr;
+  grid-template-areas:
+    "header header header"
+    "aside_left main aside_right"
+    "aside_left main aside_right"
+    "aside_left main aside_right"
+    "aside_left main aside_right"
+    "footer footer footer";
+}
+.page {
+  min-height: 100vh;  /* each page fills screen height */
+  width: 100%;
+}
+
+#page1 {
+  display: grid; /* keep your existing sci-fi dashboard grid */
+  grid-template-columns: 1fr 770px 1fr;
+  grid-template-areas:
+    "header header header"
+    "aside_left main aside_right"
+    "aside_left main aside_right"
+    "aside_left main aside_right"
+    "aside_left main aside_right"
+    "footer footer footer";
+}
+
+#page2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #051B36, #0a2a55);
+  color: white;
+  font-size: 2rem;
+}
+
+
+  #app {
+  display: block; /* remove flex centering if it blocks scroll */
+  width: 100%;
+  padding-top: 150px;   /* space for top tab + login button */
+  padding-bottom: 120px; /* space for footer */
+  box-sizing: border-box;
+}
+
+    /* Overlay layer */
+    body::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7); /* adjust 0.5 = darkness */
+      z-index: -1; /* stays behind text */
+    }
+    /* Adjust top tab flex */
+/* Adjust top tab flex */
+.top-tab {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 8px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 18, 27, 0.8); /* dark translucent HUD look */
+  border-bottom: 2px solid #0cf;
+  backdrop-filter: blur(4px);
+  color: #0cf;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.85rem;
+  z-index: 100;
+  box-shadow: 0 0 10px #0cf33aa;
+}
+
+.tab-left, .tab-right {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.tab-title {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.95rem;
+}
+
+.tab-info {
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: #66caff;
+}
+
+/* Optional: subtle hover glow effect for info items */
+.tab-info:hover {
+  text-shadow: 0 0 8px #0cf, 0 0 15px #33aaff;
+  cursor: default;
+}
+
+
+/* Login button inside top tab */
+
+.top-tab-btn:hover {
+  background: #0cf1a044;
+  box-shadow: 0 0 10px #0cf, 0 0 20px #33aaff;
+}
+
+.top-tab-btn span svg path {
+  fill: #0cf;
+}
+
+
+
+
+.tab-left, .tab-right {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.tab-title {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.95rem;
+}
+
+.tab-info {
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: #66caff;
+}
+
+/* Optional: subtle hover glow effect for info items */
+.tab-info:hover {
+  text-shadow: 0 0 8px #0cf, 0 0 15px #33aaff;
+  cursor: default;
+}
+
+
+    /* Landscape only: Show overlay in portrait mode */
+    #orientation-lock {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: #00121bcc;
+      color: #3af;
+      font-family: 'Orbitron', monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      text-align: center;
+      padding: 2rem;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    @media (orientation: portrait) {
+      #orientation-lock {
+        visibility: visible;
+        opacity: 1;
+      }
+      #app {
+        display: none;
+      }
+    }
+
+    #app {
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: visible;
+    }
+
+    /* Central rotating HUD ring container */
+    .hud-center {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      cursor: default;
+      user-select: none;
+    }
+    
+    .hud-logo {
+  position: absolute;
+  top: 48%;
+  left: 48%;
+  transform: translate(-50%, -50%); /* centers exactly */
+  width: 100px;      /* adjust size */
+  height: 100px;     /* keep square or use auto */
+  z-index: 10;      /* above rings */
+  pointer-events: none; /* optional: logo won’t block mouse */
+}
+
+
+    /* Rotating ring base */
+    .ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border: 2px solid #3af;
+      border-radius: 50%;
+      transform-style: preserve-3d;
+      transform-origin: center;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+    .ring1 {
+      width: 220px;
+      height: 220px;
+      margin: -120px 0 0 -120px;
+      border-color: #33aaffcc;
+      animation-name: spinCW;
+      animation-duration: 20s;
+    }
+    .ring2 {
+      width: 156px;
+      height: 156px;
+      margin: -88px 0 0 -88px;
+      border-color: #22ccffaa;
+      animation-name: spinCCW;
+      animation-duration: 12s;
+      border-style: dashed;
+    }
+    .ring3 {
+      width: 90px;
+      height:90px;
+      margin: -55px 0 0 -55px;
+      border-color: #55bbffdd;
+      animation-name: spinCW;
+      animation-duration: 7.5s;
+      border-style: dotted;
+    }
+
+    /* Small rotating arcs and details */
+    .arc-container {
+      position: absolute;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform-style: preserve-3d;
+    }
+    .arc1 {
+      animation-name: spinCCW;
+      animation-duration: 4.5s;
+    }
+    .arc2 {
+      animation-name: spinCW;
+      animation-duration: 3s;
+      border-width: 2px;
+      width: 45px;
+      height: 45px;
+      border-top-color: #55aaffcc;
+    }
+    .arc3 {
+      animation-name: spinCCW;
+      animation-duration: 9s;
+      border-width: 2.5px;
+      width: 78px;
+      height: 78px;
+      border-top-color: #1199ffaa;
+    }
+
+    /* HUD info boxes */
+    .info-box {
+      position: absolute;
+      background: rgba(0, 18, 27, 0.85);
+      border: 2px solid #33aaffaa;
+      border-radius: 10px;
+      width: 85px;
+      max-width: 120px;
+      padding: 15px 20px;
+      box-shadow: 0 0 15px #33aaff77;
+      font-size: 0.75rem;
+      line-height: 1.2;
+      letter-spacing: 0.05em;
+      color: #66caffdd;
+      backdrop-filter: blur(4px);
+      user-select: none;
+      font-family: 'Orbitron', monospace;
+    }
+
+    .info-box > .title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #aad8ff;
+    }
+
+    /* Each info box position (around center) */
+    .box1 { top: 10%; left: 5%; }
+    .box2 { top:10%; right: 5%; }
+    .box4 { bottom: 10%; left: 5%; }
+    .box5 { bottom: 15%; right: 25%; }
+    .box6 { bottom: 10%; right: 5%; }
+
+    /* Icons style */
+    .icon {
+      width: 24px;
+      height: 24px;
+      stroke: #33aaffcc;
+      stroke-width: 1.5;
+      fill: none;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    .info-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    /* Animations */
+    @keyframes spinCW {
+      from { transform: rotate(0deg);}
+      to { transform: rotate(360deg);}
+    }
+    @keyframes spinCCW {
+      from { transform: rotate(0deg);}
+      to { transform: rotate(-360deg);}
+    }
+   .hud-footer {
+  position: relative;  /* not fixed anymore */
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px 20px;
+  background: rgba(0, 18, 27, 0.8); /* semi-transparent dark HUD */
+  color: #0cf;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+  text-align: center;
+  border-top: 2px solid #0cf;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 -2px 10px rgba(0, 255, 255, 0.3);
+  z-index: 10;
+}
+
+.hud-footer span {
+  letter-spacing: 0.05em;
+}
+header {
+  grid-area: header;
+  width: 100%;
+  text-align: center;
+  margin: 0 0 60px 0;
+  text-shadow: 0 10px 20px rgba(0,0,0,0.15), 0 8px 8px rgba(0,0,0,0.25);
+}
+
+header h1 {
+  font-size: 4em;
+  margin-bottom: -5px;
+  letter-spacing: 0.1em;
+}
+
+header h2 {
+  font-size: 1.5em;
+  letter-spacing: 1.7em;
+  margin: 0;
+  margin-left: 25px;
+}
+
+.aside_left {
+  grid-area: aside_left;
+  height: 80vh;
+}
+
+.aside_right {
+  grid-area: aside_right;
+  margin: 0 10px;
+  width: 95%;
+  overflow: hidden;
+}
+
+.box_title {
+  margin: 0;
+  padding: 0px;
+}
+
+.records {
+  width: 95%;
+  border: 1px solid #033F73;
+  padding: 5px;
+}
+
+.record {
+  font-family: 'Roboto', sans-serif;
+  text-transform: none;
+  width: 70%;
+  border: 0px solid white;
+  margin: 10px 5px;
+}
+
+.over_info {
+ display:none;
+}
+
+.aside_right:hover .over_info {
+  position: absolute;
+  display:block;
+  border: 1px solid white;
+  text-transform: uppercase;
+  float: left;
+  top: 30%;
+  right: 9%;
+  margin: 0 auto;
+  padding: 10px;
+  color: #fff;
+  z-index: 2;
+  background-color: #033F73;
+}
+
+.appear {
+  opacity: 1;
+  animation-name: appear;
+  animation-iteration-count: infinite;
+}
+
+#point_1 {
+  animation-duration: 2s;
+  animation-delay: 0s;
+}
+#point_2 {
+  animation-duration: 1.5s;
+  animation-delay: 0.2s; 
+}
+#point_3 {
+  animation-duration: 0.5s;
+  animation-delay: 0.4s;
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 100%;
+  }
+}
+
+.aside_right:hover .records {
+  opacity: 0.6;
+}
+
+main {
+  grid-area: main;
+  justify-self: center;
+}
+
+.world {
+  text-align: center;
+  width: 770px;
+  height: 373px;
+}
+
+#world_map {
+  width: 100%;
+  height: 100%;
+  filter: invert(16%) sepia(63%) saturate(2189%) hue-rotate(190deg) brightness(95%) contrast(98%);
+  animation-name: color;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: linear;
+}
+
+@keyframes colors {
+  100% {
+    filter: invert(41%) sepia(43%) saturate(690%) hue-rotate(159deg) brightness(99%) contrast(87%);
+  }
+}
+
+.point {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: transparent;
+  opacity: 0.3;
+  border: 2px solid #F2B90C;
+  animation-name: boing;
+  animation-duration: 0.8s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: ease-in;
+}
+
+#point_1 {
+  top: -270px;
+  left: 160px;
+  animation-duration: 0.9s;
+}
+
+#point_2 {
+  top: -200px;
+  left: 535px;
+  animation-delay: 0.15s;
+  animation-duration: 0.7s;
+}
+
+#point_3 {
+  top: -330px;
+  left: 360px;
+  animation-delay: 0.30s;
+}
+
+#point_4 {
+  top:-185px;
+  left: 245px;
+  animation-delay: 0.45s;
+  animation-duration: 0.7s;
+}
+
+@keyframes boing {
+  0% {
+    transform: scale(0.5);
+  }
+  100% {
+   transform: scale(2); 
+  }
+}
+
+.footer {
+  grid-area: footer;
+  width: 100%;
+}
+
+.big-score, .item, .box_title {
+  border: 1px double #033F73;
+  color:  #377FAC;
+  margin: 50px 25px;
+  padding: 25px;
+  border-width: 3px;
+  border-style: dotted solid;
+}
+
+
+.item {
+  height: 9vh;
+}
+
+.item p {
+  font-family: Roboto;
+}
+
+.big-score:hover, .item:hover {
+  border: 3px solid #377FAC;
+}
+
+.score {
+  font-size: 9em;
+  font-weight: 900;
+  font-family: 'Roboto', sans-serif;
+  color: #b9b9b9;
+  text-shadow: 0 10px 20px rgba(0,0,0,0.15), 0 8px 8px rgba(0,0,0,0.25);
+}
+
+.success {
+  color: #3BB466;
+}
+
+.middle {
+  color: #F2B90C;
+}
+
+.failure {
+  color: #8E1900;
+}
+
+.success, .middle, .failure {
+  font-weight: bold;
+}
+
+#test_test {
+  width: 3vh;
+  height: 3vh;
+  border-radius: 50%;
+  border-left: 3px solid red;
+  padding: 25px;
+}
+
+#test_test h3 {
+  margin: 0;
+  padding: 0;
+  margin-left: -4px;
+  text-align: center;
+}
+
+#test_test:hover {
+  border-left: 3px solid lightgreen;
+  border-bottom: 3px solid blue;
+}
+.circle {
+  position: relative;
+  margin: 7em auto;
+  width: 16em;
+  height: 16em;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.arc0 {
+  overflow: hidden;
+  position: absolute;
+  /* make sure top & left values are - the width of the border */
+  /* the bottom right corner is the centre of the parent circle */
+  top: -1em;
+  right: 50%;
+  bottom: 50%;
+  left: -1em;
+  /* the transform origin is the bottom right corner */
+  transform-origin: 100% 100%;
+  /* rotate by any angle */
+  /* the skew angle is 90deg - the angle you want for the arc */
+  transform: rotate(90deg) skewX(30deg);
+}
+.box_fill {
+  border-left: double #033F73;
+  padding-left: 4px;
+  width: 50px;
+  /*height: 129px;*/
+  height: 109px;
+  transform: rotate(-90deg);
+}
+@keyframes bigger {
+  0% {
+    transform: scale(0.1);
+  }
+  100% {
+   transform: scale(2); 
+  }
+}
+
+@media (max-width: 1024px) {
+  body {
+    grid-template-columns: 770px;
+    grid-template-areas:
+      "header"
+      "main"
+      "aside_left"
+      "aside_right"
+      "footer";
+  }
+}
+@-webkit-keyframes holox-fed {
+  0% {
+    box-shadow: 0 0 13px rgba(17, 241, 255, 0.6) inset;
+  }
+  50% {
+    box-shadow: 0 0 14px #11f1ff inset;
+  }
+  100% {
+    box-shadow: 0 0 13px rgba(17, 241, 255, 0.6) inset;
+  }
+}
+@keyframes holox-fed {
+  0% {
+    box-shadow: 0 0 13px rgba(17, 241, 255, 0.6) inset;
+  }
+  50% {
+    box-shadow: 0 0 14px #11f1ff inset;
+  }
+  100% {
+    box-shadow: 0 0 13px rgba(17, 241, 255, 0.6) inset;
+  }
+}
+@-webkit-keyframes holox-reb {
+  0% {
+    box-shadow: 0 0 13px rgba(255, 9, 0, 0.6) inset;
+  }
+  50% {
+    box-shadow: 0 0 14px #ff0900 inset;
+  }
+  100% {
+    box-shadow: 0 0 13px rgba(255, 9, 0, 0.6) inset;
+  }
+}
+@keyframes holox-reb {
+  0% {
+    box-shadow: 0 0 13px rgba(255, 9, 0, 0.6) inset;
+  }
+  50% {
+    box-shadow: 0 0 14px #ff0900 inset;
+  }
+  100% {
+    box-shadow: 0 0 13px rgba(255, 9, 0, 0.6) inset;
+  }
+}
+@-webkit-keyframes holox-pen {
+  0% {
+    box-shadow: 0 0 13px rgba(102, 102, 102, 0.6) inset;
+  }
+  50% {
+    box-shadow: 0 0 14px #666666 inset;
+  }
+  100% {
+    box-shadow: 0 0 13px rgba(102, 102, 102, 0.6) inset;
+  }
+}
+@keyframes holox-pen {
+  0% {
+    box-shadow: 0 0 13px rgba(102, 102, 102, 0.6) inset;
+  }
+  50% {
+    box-shadow: 0 0 14px #666666 inset;
+  }
+  100% {
+    box-shadow: 0 0 13px rgba(102, 102, 102, 0.6) inset;
+  }
+}
+a[class^='holo-btn'] {
+  color: #999;
+  font: normal 1.1em/3.11em Electrolize, "Cultive Mono", Tahoma, sans-serif;
+  text-decoration: none;
+  text-transform: uppercase;
+  display: block;
+  height: 60px;
+  transition: all 330ms linear;
+}
+a[class^='holo-btn']:hover {
+  color: #fff;
+  text-rendering: optimizeLegibility;
+}
+a[class^='holo-btn']:hover .top {
+  margin-top: -55px;
+  -webkit-animation: none;
+          animation: none;
+  box-shadow: none;
+}
+a[class^='holo-btn']:hover .bottom {
+  margin-top: -47px;
+}
+a[class^='holo-btn']:active .skew {
+  -webkit-animation: none;
+          animation: none;
+  box-shadow: 0 0 22px rgba(102, 102, 102, 0.6) inset;
+}
+
+a.holo-btn span {
+  box-sizing: border-box;
+}
+
+a.holo-btn-fed {
+  color: #00f7ff;
+}
+a.holo-btn-fed:hover {
+  color: #e5Feff;
+}
+a.holo-btn-fed:active .skew {
+  box-shadow: 0 0 22px rgba(17, 241, 255, 0.6) inset;
+}
+
+a.holo-btn-reb {
+  color: #ff443d;
+}
+a.holo-btn-reb:hover {
+  color: #ffd8d6;
+}
+a.holo-btn-reb:active .skew {
+  box-shadow: 0 0 22px rgba(255, 9, 0, 0.6) inset;
+}
+
+span[class^='cta'] {
+  width: 100%;
+  display: block;
+  padding: 0 29px;
+  text-shadow: 0 0 30px #666;
+}
+span[class^='cta']:before {
+  text-transform: none;
+  font-family: fontastic1;
+  font-size: 1.4em;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 22px;
+  padding-bottom: 4px;
+  transition: margin 500ms cubic-bezier(0.79, 0.01, 1, 0.21);
+}
+
+.holo-btn-fed span[class^='cta'] {
+  text-shadow: 0 0 30px #11f1ff;
+}
+
+.holo-btn-reb span[class^='cta'] {
+  text-shadow: 0 0 30px #ff0900;
+}
+
+.cta-d:before {
+  content: "d";
+}
+
+.cta-e:before {
+  content: "e";
+}
+
+.cta-f:before {
+  content: "f";
+}
+
+.cta-h:before {
+  content: "h";
+}
+
+.cta-x:before {
+  content: "x";
+}
+
+.top {
+  margin-top: -60px;
+}
+
+.bottom {
+  margin-top: -42px;
+}
+
+.skew {
+  transform: skew(-45deg);
+  border: 1px solid transparent;
+  border-right-width: 2px;
+  -o-border-image: linear-gradient(to bottom right, #bbbbbb 0%, #999999 100%) 1;
+     border-image: linear-gradient(to bottom right, #bbbbbb 0%, #999999 100%) 1;
+  -webkit-animation: holox-pen 5.4s ease 1s infinite;
+          animation: holox-pen 5.4s ease 1s infinite;
+  padding: 24px;
+  display: block;
+  transition: all 330ms linear;
+  box-shadow: 0 0 13px rgba(102, 102, 102, 0.6) inset;
+}
+
+.holo-btn-fed .skew {
+  -o-border-image: linear-gradient(to bottom right, #99fcff 0%, #00f7ff 100%) 1;
+     border-image: linear-gradient(to bottom right, #99fcff 0%, #00f7ff 100%) 1;
+  -webkit-animation-name: holox-fed;
+          animation-name: holox-fed;
+  box-shadow: 0 0 13px rgba(17, 241, 255, 0.6) inset;
+}
+
+.holo-btn-reb .skew {
+  -o-border-image: linear-gradient(to bottom right, #ff7570 0%, #ff443d 100%) 1;
+     border-image: linear-gradient(to bottom right, #ff7570 0%, #ff443d 100%) 1;
+  -webkit-animation-name: holox-reb;
+          animation-name: holox-reb;
+  box-shadow: 0 0 13px rgba(255, 9, 0, 0.6) inset;
+}
+
+
+
+
+    
+
+  </style>
+</head>
+<body>
+
+  <div id="orientation-lock" role="region" aria-live="polite">
+    <p>Please rotate your device to landscape orientation to view.</p>
+  </div>
+  <main id="app" role="main" aria-label="Futuristic Heads-Up Display Animation">
+    <section class="hud-center" aria-describedby="desc-hud">
+      <div class="ring ring1" aria-hidden="true"></div>
+      <div class="ring ring2" aria-hidden="true"></div>
+      <div class="ring ring3" aria-hidden="true"></div>
+      <img src="logo.png" alt="Logo" class="hud-logo">
+</div>
+<div class="top-tab">
+  <div class="tab-left">
+    <span class="tab-title">BLACKMOON</span>
+    <span class="tab-info">v1.0.0</span>
+  </div>
+  <div class="tab-right">
+    <span class="tab-info">Users Online: 42</span>
+    <span class="tab-info">Status: Active</span>
+  </div>
+</div>
+
+
+
+
+      <div class="arc-container" style="width: 160px; height: 160px; margin-left: -80px; margin-top: -80px; top: 50%; left: 50%;">
+        <div class="arc arc1"></div>
+      </div>
+      <div class="arc-container" style="width: 130px; height: 130px; margin-left: -65px; margin-top: -65px; top: 50%; left: 50%;">
+        <div class="arc arc2"></div>
+      </div>
+      <div class="arc-container" style="width: 190px; height: 190px; margin-left: -95px; margin-top: -95px; top: 50%; left: 50%;">
+        <div class="arc arc3"></div>
+      </div>
+    </section>
+
+    <!-- HUD info boxes with icons and dum text -->
+    <aside class="info-box box1" role="region" aria-label="User profile info">
+      <div class="info-header">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg>
+        <span class="title">Name</span>
+      </div>
+      <p>JASEEM NIZARDEEN </p>
+    </aside>
+
+    <aside class="info-box box2" role="region" aria-label="System alert status">
+      <div class="info-header">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6" y="6" width="12" height="12" rx="2" ry="2"/></svg>
+        <span class="title">Profession</span>
+      </div>
+      <p>Gamer, Web developer, System programmer</p>
+    </aside>
+
+    
+
+    <aside class="info-box box4" role="region" aria-label="Location and mapping data">
+      <div class="info-header">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21s8-4.5 8-10a8 8 0 1 0-16 0c0 5.5 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>
+        <span class="title">Location</span>
+      </div>
+      <p>Kattankudy , Batticaloa , Sri lanka</p>
+    </aside>
+
+
+
+    <aside class="info-box box6" role="region" aria-label="Wi-Fi signal information">
+      <div class="info-header">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M2 12a10 10 0 0 1 20 0"/></svg>
+        <span class="title">Contact</span>
+      </div>
+      <p><a href="tel:+94759825269">Call</a><br> <a href="mailto:jaseemnizardeen200@gmail.com">E-Mail</a></p>
+    </aside>
+  </main>
+      <!-- First Section (Landing Sci-Fi Dashboard) -->
+  
+
+  <!-- Second Section (New Page after Scroll)>
+
+  <!-- PAGE 1: Landing -->
+ 
+
+  <!-- PAGE 2: Sci-Fi Dashboard -->
+  <section class="page page2">
+       <div class="landing-content">
+      <h1>Active User region</h1>
+    </div>
+    <header>
+      <h1>UNKNOWN_26900</h1>
+      <h2>BLACKMOON</h2>
+    </header>
+
+    <aside class="aside_left">
+      <div class="big-score">
+        <div class="score-title">Measure</div>
+        <div class="score">255.0</div>
+      </div>
+    </aside>
+
+    <aside class="aside_right">
+      <div class="box_title">
+        <h3>DATA FILES</h3>
+        <div class="over_info">UPLOADING FILES</div>
+        <div class="records">
+          <div class="record">FILE_060.chk&nbsp;&nbsp;278Ko&nbsp;&nbsp;10/06/2025</div>
+          <div class="record">FILE_061.chk&nbsp;&nbsp;300Ko&nbsp;&nbsp;10/07/2025</div>
+          <div class="record">FILE_062.chk&nbsp;&nbsp;320Ko&nbsp;&nbsp;10/08/2025</div>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <div class="world">
+        <img id="world_map" src="https://upload.wikimedia.org/wikipedia/commons/a/a0/World_map_with_points.svg" alt="">
+        <div class="point" id="point_1"></div>
+        <div class="point" id="point_2"></div>
+        <div class="point" id="point_3"></div>
+        <div class="point" id="point_4"></div>
+      </div>
+
+      <div class="item"><h3>Test n°1</h3><p>Results: <span class="success">Ok</span></p></div>
+      <div class="item"><h3>Test n°2</h3><p>Results: <span class="middle">7/15</span></p></div>
+      <div class="item"><h3>Test n°3</h3><p>Results: <span class="failure">1/15</span></p></div>
+      <div class="item"><h3>Test n°4</h3><p>Results: <span class="success">14/15</span></p></div>
+      
+  </section>
+</section>
+<!-- partial:index.partial.html -->
+<a class='holo-btn-reb' href='login/dist/index.html'>
+  <span class='cta-x'>ADMIN LOGIN</span>
+  <span class='skew top'></span>
+  <span class='skew bottom'></span>
+  </a>
+    <a class='holo-btn' href='Edex.html'>
+      <span class='cta-e'>Cloud Access</span>
+      <span class='skew top'></span>
+      <span class='skew bottom'></span>
+      </a>
+        <a class='holo-btn-fed' href='System status/dist/index.html'>
+          <span class='cta-d'>system status</span>
+          <span class='skew top'></span>
+          <span class='skew bottom'></span>
+          <a>
+<!-- partial -->
+
+
+
+ 
+<footer class="hud-footer">
+  <span>&copy; 2025 BLACKMOON. All rights reserved.</span>
+</footer>
+
+  <script>
+    // Optional: You can add subtle glow or flicker animation if needed,
+    // but using pure CSS animations for rotating rings suffices.
+  </script>
+</body>
+</html>
+

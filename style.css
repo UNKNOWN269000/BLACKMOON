@@ -1,0 +1,469 @@
+@import url('https://fonts.googleapis.com/css?family=Audiowide|Libre+Barcode+39+Text|Roboto&display=swap');
+
+/*
+font-family: 'Roboto', sans-serif;
+font-family: 'Audiowide', cursive;
+font-family: 'Libre Barcode 39 Text', cursive;
+*/
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #051B36;
+  display: grid;
+  font-family: 'Audiowide', cursive;
+  text-transform: uppercase;
+  font-size: 0.75em;
+  letter-spacing: 0.1em;
+  color: #f2f2f2;
+  grid-template-columns: 1fr 770px 1fr;
+  grid-template-areas:
+    "header header header"
+    "aside_left main aside_right"
+    "aside_left main aside_right"
+    "aside_left main aside_right"
+    "aside_left main aside_right"
+    "footer footer footer";
+}
+
+header {
+  grid-area: header;
+  width: 100%;
+  text-align: center;
+  margin: 0 0 60px 0;
+  text-shadow: 0 10px 20px rgba(0,0,0,0.15), 0 8px 8px rgba(0,0,0,0.25);
+}
+
+header h1 {
+  font-size: 4em;
+  margin-bottom: -5px;
+  letter-spacing: 0.1em;
+}
+
+header h2 {
+  font-size: 1.5em;
+  letter-spacing: 1.7em;
+  margin: 0;
+  margin-left: 25px;
+}
+
+.aside_left {
+  grid-area: aside_left;
+  height: 80vh;
+}
+
+.aside_right {
+  grid-area: aside_right;
+  margin: 0 10px;
+  width: 95%;
+  overflow: hidden;
+}
+
+.box_title {
+  margin: 0;
+  padding: 0px;
+}
+
+.records {
+  width: 95%;
+  border: 1px solid #033F73;
+  padding: 5px;
+}
+
+.record {
+  font-family: 'Roboto', sans-serif;
+  text-transform: none;
+  width: 70%;
+  border: 0px solid white;
+  margin: 10px 5px;
+}
+
+.over_info {
+ display:none;
+}
+
+.aside_right:hover .over_info {
+  position: absolute;
+  display:block;
+  border: 1px solid white;
+  text-transform: uppercase;
+  float: left;
+  top: 30%;
+  right: 9%;
+  margin: 0 auto;
+  padding: 10px;
+  color: #fff;
+  z-index: 2;
+  background-color: #033F73;
+}
+
+.appear {
+  opacity: 1;
+  animation-name: appear;
+  animation-iteration-count: infinite;
+}
+
+#point_1 {
+  animation-duration: 2s;
+  animation-delay: 0s;
+}
+#point_2 {
+  animation-duration: 1.5s;
+  animation-delay: 0.2s; 
+}
+#point_3 {
+  animation-duration: 0.5s;
+  animation-delay: 0.4s;
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 100%;
+  }
+}
+
+.aside_right:hover .records {
+  opacity: 0.6;
+}
+
+main {
+  grid-area: main;
+  justify-self: center;
+}
+
+.world {
+  text-align: center;
+  width: 770px;
+  height: 373px;
+}
+
+#world_map {
+  width: 100%;
+  height: 100%;
+  filter: invert(16%) sepia(63%) saturate(2189%) hue-rotate(190deg) brightness(95%) contrast(98%);
+  animation-name: color;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: linear;
+}
+
+@keyframes colors {
+  100% {
+    filter: invert(41%) sepia(43%) saturate(690%) hue-rotate(159deg) brightness(99%) contrast(87%);
+  }
+}
+
+.point {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: transparent;
+  opacity: 0.3;
+  border: 2px solid #F2B90C;
+  animation-name: boing;
+  animation-duration: 0.8s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: ease-in;
+}
+
+#point_1 {
+  top: -270px;
+  left: 160px;
+  animation-duration: 0.9s;
+}
+
+#point_2 {
+  top: -200px;
+  left: 535px;
+  animation-delay: 0.15s;
+  animation-duration: 0.7s;
+}
+
+#point_3 {
+  top: -330px;
+  left: 360px;
+  animation-delay: 0.30s;
+}
+
+#point_4 {
+  top:-185px;
+  left: 245px;
+  animation-delay: 0.45s;
+  animation-duration: 0.7s;
+}
+
+@keyframes boing {
+  0% {
+    transform: scale(0.5);
+  }
+  100% {
+   transform: scale(2); 
+  }
+}
+
+.footer {
+  grid-area: footer;
+  width: 100%;
+}
+
+.big-score, .item, .box_title {
+  border: 1px double #033F73;
+  color:  #377FAC;
+  margin: 50px 25px;
+  padding: 25px;
+  border-width: 3px;
+  border-style: dotted solid;
+}
+
+
+.item {
+  height: 9vh;
+}
+
+.item p {
+  font-family: Roboto;
+}
+
+.big-score:hover, .item:hover {
+  border: 3px solid #377FAC;
+}
+
+.score {
+  font-size: 9em;
+  font-weight: 900;
+  font-family: 'Roboto', sans-serif;
+  color: #b9b9b9;
+  text-shadow: 0 10px 20px rgba(0,0,0,0.15), 0 8px 8px rgba(0,0,0,0.25);
+}
+
+.success {
+  color: #3BB466;
+}
+
+.middle {
+  color: #F2B90C;
+}
+
+.failure {
+  color: #8E1900;
+}
+
+.success, .middle, .failure {
+  font-weight: bold;
+}
+
+#test_test {
+  width: 3vh;
+  height: 3vh;
+  border-radius: 50%;
+  border-left: 3px solid red;
+  padding: 25px;
+}
+
+#test_test h3 {
+  margin: 0;
+  padding: 0;
+  margin-left: -4px;
+  text-align: center;
+}
+
+#test_test:hover {
+  border-left: 3px solid lightgreen;
+  border-bottom: 3px solid blue;
+}
+
+
+
+
+
+
+
+
+
+.circle {
+  position: relative;
+  margin: 7em auto;
+  width: 16em;
+  height: 16em;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.arc {
+  overflow: hidden;
+  position: absolute;
+  /* make sure top & left values are - the width of the border */
+  /* the bottom right corner is the centre of the parent circle */
+  top: -1em;
+  right: 50%;
+  bottom: 50%;
+  left: -1em;
+  /* the transform origin is the bottom right corner */
+  transform-origin: 100% 100%;
+  /* rotate by any angle */
+  /* the skew angle is 90deg - the angle you want for the arc */
+  transform: rotate(90deg) skewX(30deg);
+}
+
+.arc:before {
+  box-sizing: border-box;
+  display: block;
+  border: solid 1em lightgreen;
+  width: 200%;
+  height: 200%;
+  border-radius: 50%;
+  transform: skewX(-30deg);
+  content: '';
+}
+
+
+
+
+
+
+.box_fill {
+  border-left: double #033F73;
+  padding-left: 4px;
+  width: 50px;
+  /*height: 129px;*/
+  height: 109px;
+  transform: rotate(-90deg);
+}
+
+.fill {
+  background-color: #033F73;
+  /*border-top:2px solid #377FAC;
+  border-right: 3px solid white; */
+  border-right: 3px solid #377FAC;
+  height: 10px;
+  animation-duration: 1.2s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  margin-bottom: 1px;
+  animation-name: filling;
+}
+
+.fill_1 {
+  
+}
+.fill_2 {
+  animation-delay: 0.1s;
+}
+.fill_3 {
+  animation-delay: 0.2s;
+}
+.fill_4 {
+  animation-delay: 0.3s;
+}
+.fill_5 {
+  animation-delay: 0.4s;
+}
+.fill_6 {
+  animation-delay: 0.3s;
+}
+.fill_7 {
+  animation-delay: 0.4s;
+}
+.fill_8 {
+  animation-delay: 0.5s;
+}
+.fill_9 {
+  animation-delay: 0.3s;
+}
+.fill_10 {
+  animation-delay: 0.7s;
+}
+
+@keyframes filling {
+  0% {
+    width: 60%;
+  }
+  50% {
+    width: 30%;
+  }
+  70% {
+    width: 90%;
+  }
+  100% {
+    width: 20%;
+  }
+}
+
+
+
+
+.sonar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #033F73;
+  margin: 50px;
+}
+
+.sonar, .inner {
+  animation-name: bigger;
+  animation-duration: 0.7s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.inner {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  top: 10px;
+  left: 10px;
+  border-radius: 50%;
+  background-color: #051B36;
+  animation-delay: 0.1s;
+}
+
+#inner2 {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #033F73;
+  position: relative;
+  top: 15px;
+  left: 15px;
+}
+
+#inner3 {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #051B36;
+  position: relative;
+  top: 2.5px;
+  left: 2.5px;
+}
+
+@keyframes bigger {
+  0% {
+    transform: scale(0.1);
+  }
+  100% {
+   transform: scale(2); 
+  }
+}
+
+@media (max-width: 1024px) {
+  body {
+    grid-template-columns: 770px;
+    grid-template-areas:
+      "header"
+      "main"
+      "aside_left"
+      "aside_right"
+      "footer";
+  }
+}
