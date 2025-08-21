@@ -7,6 +7,20 @@ function updateClock() {
 		"clock"
 	).textContent = `${hours}:${minutes}:${seconds}`;
 }
+// PIN lock
+const correctPIN = "25269000"; // set your PIN here
+
+function checkPIN() {
+  const input = document.getElementById("pin-input").value;
+  const errorMsg = document.getElementById("pin-error");
+
+  if (input === correctPIN) {
+    document.getElementById("pin-lock").style.display = "none"; // unlock
+  } else {
+    errorMsg.textContent = "Incorrect PIN. Try again.";
+  }
+}
+
 
 setInterval(updateClock, 1000);
 updateClock();
