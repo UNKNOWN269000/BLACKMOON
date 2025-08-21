@@ -4,19 +4,118 @@
   <meta charset="UTF-8">
   <title>SYSTEM STATUS</title>
   <link rel="stylesheet" href="./style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
 
+    /* 🔐 PIN Lock Overlay */
+    #pin-lock {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;              /* always visible on load */
+      justify-content: center;
+      align-items: center;
+      z-index: 999999999;         /* max priority */
+    }
+
+    .pin-box {
+      background: #113f59;
+      border: 2px solid cyan;
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 0 20px cyan;
+    }
+
+    .pin-box h2 {
+      color: cyan;
+      margin-bottom: 15px;
+    }
+
+    .pin-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 10px 0 20px;
+    }
+    .pin-dots span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid cyan;
+      background: #333;
+    }
+    .pin-dots span.filled {
+      background: cyan;
+      box-shadow: 0 0 6px cyan;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      gap: 10px;
+      justify-content: center;
+    }
+    .keypad button {
+      padding: 15px;
+      font-size: 18px;
+      background: #0a0b10;
+      border: 2px solid cyan;
+      color: cyan;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .keypad button:hover {
+      background: cyan;
+      color: black;
+    }
+
+    .error {
+      color: red;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    /* 🔲 Fake dashboard for testing */
+    #dashboard {
+      display: none; /* hidden until unlocked */
+      padding: 20px;
+      background: #111;
+      color: white;
+      min-height: 100vh;
+    }
+  </style>
 </head>
 <body>
-  <!-- PIN Lock Overlay -->
-<div id="pin-lock" class="pin-lock">
-  <div class="pin-box">
-    <h2>Enter PIN</h2>
-    <input type="password" id="pin-input" maxlength="9" placeholder="******" />
-    <button onclick="checkPIN()">Unlock</button>
-    <p id="pin-error" class="error"></p>
-  </div>
-</div>
 
+  <!-- PIN Lock Overlay -->
+  <div id="pin-lock">
+    <div class="pin-box">
+      <h2>Enter PIN</h2>
+      <div id="pin-dots" class="pin-dots"></div>
+      <div class="keypad">
+        <button onclick="pressKey('1')">1</button>
+        <button onclick="pressKey('2')">2</button>
+        <button onclick="pressKey('3')">3</button>
+        <button onclick="pressKey('4')">4</button>
+        <button onclick="pressKey('5')">5</button>
+        <button onclick="pressKey('6')">6</button>
+        <button onclick="pressKey('7')">7</button>
+        <button onclick="pressKey('8')">8</button>
+        <button onclick="pressKey('9')">9</button>
+        <button onclick="clearPIN()">C</button>
+        <button onclick="pressKey('0')">0</button>
+        <button onclick="checkPIN()">⏎</button>
+      </div>
+      <p id="pin-error" class="error"></p>
+    </div>
+  </div>
 <!-- partial:index.partial.html -->
 <div class="nav">
 	<div class="nav-title">STATUS DASHBOARD</div>
@@ -299,7 +398,46 @@
 	</div>
 </div>
 <!-- partial -->
-  <script src='https://orcunsipahi.net/coffee.js'></script><script  src="./script.js"></script>
+ <script>
+    const correctPIN = "25269000"; // change to your PIN
+    let enteredPIN = "";
+
+    function updateDots() {
+      const dotsContainer = document.getElementById("pin-dots");
+      dotsContainer.innerHTML = "";
+      for (let i = 0; i < 8; i++) {
+        const dot = document.createElement("span");
+        if (i < enteredPIN.length) dot.classList.add("filled");
+        dotsContainer.appendChild(dot);
+      }
+    }
+
+    function pressKey(num) {
+      if (enteredPIN.length < 8) {
+        enteredPIN += num;
+        updateDots();
+      }
+    }
+
+    function clearPIN() {
+      enteredPIN = "";
+      updateDots();
+      document.getElementById("pin-error").textContent = "";
+    }
+
+    function checkPIN() {
+      if (enteredPIN === correctPIN) {
+        document.getElementById("pin-lock").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+      } else {
+        document.getElementById("pin-error").textContent = "Incorrect PIN. Try again.";
+        clearPIN();
+      }
+    }
+
+    updateDots();
+  </script>
+  <script  src="./script.js"></script>
 
 </body>
 </html>
