@@ -94,7 +94,7 @@
 </head>
 <body>
 
-  <!-- PIN Lock Overlay -->
+  <!-- 🔐 PIN Lock -->
   <div id="pin-lock">
     <div class="pin-box">
       <h2>Enter PIN</h2>
@@ -116,8 +116,9 @@
       <p id="pin-error" class="error"></p>
     </div>
   </div>
-<!-- partial:index.partial.html -->
-<div class="nav">
+
+  <!-- 🔲 Dashboard -->
+  <div class="nav">
 	<div class="nav-title">STATUS DASHBOARD</div>
 	<div class="digital-clock" id="clock">00:00:00</div>
 </div>
@@ -337,6 +338,116 @@
 		<div class="hCardBorder"></div>
 		<div class="hCard">
 			<div class="card-title">WEAPONS STATUS</div>
+			<div class="card-value">ARMED</div>
+			<div class="data-value">
+				<span class="data-label">MALWARE:</span> READY
+			</div>
+			<div class="data-value">
+				<span class="data-label">SPYWARE:</span> 87%
+			</div>
+			<div class="data-value">
+				<span class="data-label">DDOS TOOL:</span> 100%
+			</div>
+
+		</div>
+		<div class="hBottom"></div>
+		<div class="hLeft"></div>
+		<div class="hRight"></div>
+	</div>
+
+	<div class="hContainer">
+		<div class="hCardBorder"></div>
+		<div class="hCard glassmorphism">
+			<div class="card-title">SERVER STATUS</div>
+			<div class="card-value">DATA SERVER</div>
+			<div class="data-value">
+				<span class="data-label">ACTIVE:</span> 82%
+			</div>
+			<div class="data-value">
+				<span class="data-label">CONDITION:</span> OPTIMAL
+			</div>
+			<div class="data-value">
+				<span class="data-label">LOCATION:</span> NEARBY
+			</div>
+
+		</div>
+		<div class="hBottom"></div>
+		<div class="hLeft"></div>
+		<div class="hRight"></div>
+	</div>
+
+	<div class="hContainer">
+		<div class="hCardBorder"></div>
+		<div class="hCard">
+			<div class="card-title">OBJECTIVES</div>
+			<div class="card-value">3 ACTIVE</div>
+			<div class="data-value">
+				<span class="data-label">PRIMARY:</span>
+				<span style="color: var(--neon-pink);">THE HEIST</span>
+			</div>
+			<div class="data-value">
+				<span class="data-label">SIDE JOB:</span> DELAMAIN
+			</div>
+			<div class="data-value">
+				<span class="data-label">GIGS:</span> 7 AVAILABLE
+			</div>
+
+		</div>
+		<div class="hBottom"></div>
+		<div class="hLeft"></div>
+		<div class="hRight"></div>
+	</div>
+</div>
+
+  <!-- SHA-256 Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+  <script>
+    // ✅ SHA-256 hash of "25269000"
+    const correctHash = "0dac6dc55e3aceb836ae15df8713deb7b158f3eff7d5084156e0f09b0facb484";
+
+    let enteredPIN = "";
+
+    function updateDots() {
+      const dotsContainer = document.getElementById("pin-dots");
+      dotsContainer.innerHTML = "";
+      for (let i = 0; i < 8; i++) {
+        const dot = document.createElement("span");
+        if (i < enteredPIN.length) dot.classList.add("filled");
+        dotsContainer.appendChild(dot);
+      }
+    }
+
+    function pressKey(num) {
+      if (enteredPIN.length < 8) {
+        enteredPIN += num;
+        updateDots();
+      }
+    }
+
+    function clearPIN() {
+      enteredPIN = "";
+      updateDots();
+      document.getElementById("pin-error").textContent = "";
+    }
+
+    function checkPIN() {
+      const hash = CryptoJS.SHA256(enteredPIN).toString();
+      if (hash === correctHash) {
+        document.getElementById("pin-lock").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+      } else {
+        document.getElementById("pin-error").textContent = "Incorrect PIN. Try again.";
+        clearPIN();
+      }
+    }
+
+    updateDots();
+  </script>
+  <script  src="./script.js"></script>
+</body>
+</html>
+tle">WEAPONS STATUS</div>
 			<div class="card-value">ARMED</div>
 			<div class="data-value">
 				<span class="data-label">MALWARE:</span> READY
